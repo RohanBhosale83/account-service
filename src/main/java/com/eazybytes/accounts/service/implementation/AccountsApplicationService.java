@@ -22,7 +22,7 @@ public class AccountsApplicationService implements IAccountsApplicationService
     @Override
     public void createAccount(CustomerInfo customerInfo, AccountsInfo accountsInfo)
     {
-        if (customerInfo != null )
+        if (customerInfo != null)
         {
             if (customerRepository.findById(customerInfo.getCustomerId()).isPresent())
             {
