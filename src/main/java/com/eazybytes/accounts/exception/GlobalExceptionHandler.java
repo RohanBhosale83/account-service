@@ -17,9 +17,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Global exception handler for the application.
+ * This class provides centralized exception handling for controllers using Spring's @ControllerAdvice annotation.
+ * It extends ResponseEntityExceptionHandler to handle validation-related exceptions.
+ */
 @ControllerAdvice
-public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler
+public class GlobalExceptionHandler extends ResponseEntityExceptionHandler
 {
+    /**
+     * Handles ResourceNotFoundException and returns a custom error response.
+     *
+     * @param exception  The ResourceNotFoundException thrown by the application.
+     * @param webRequest The current web request.
+     * @return A ResponseEntity containing the custom error response with HTTP status NOT_FOUND.
+     */
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<com.eazybytes.accounts.model.ErrorResponse> handleResourceNotFoundException(ResourceNotFoundException exception, WebRequest webRequest)
     {
@@ -28,6 +40,13 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
+    /**
+     * Handles EntityAlreadyExistsException and returns a custom error response.
+     *
+     * @param exception  The EntityAlreadyExistsException thrown by the application.
+     * @param webRequest The current web request.
+     * @return A ResponseEntity containing the custom error response with HTTP status BAD_REQUEST.
+     */
     @ExceptionHandler(EntityAlreadyExistsException.class)
     public ResponseEntity<com.eazybytes.accounts.model.ErrorResponse> handleEntityAlreadyExists(EntityAlreadyExistsException exception, WebRequest webRequest)
     {
@@ -36,6 +55,13 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
+    /**
+     * Handles generic exceptions and returns a custom error response.
+     *
+     * @param exception  The generic exception thrown by the application.
+     * @param webRequest The current web request.
+     * @return A ResponseEntity containing the custom error response with HTTP status INTERNAL_SERVER_ERROR.
+     */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<com.eazybytes.accounts.model.ErrorResponse> handleGlobalException(Exception exception, WebRequest webRequest)
     {
@@ -45,9 +71,18 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    /**
+     * Handles validation errors for method arguments and returns a map of field-specific error messages.
+     *
+     * @param ex      The MethodArgumentNotValidException thrown during validation.
+     * @param headers The HTTP headers.
+     * @param status  The HTTP status code.
+     * @param request The current web request.
+     * @return A ResponseEntity containing a map of validation errors with HTTP status BAD_REQUEST.
+     */
     @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(
-            MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request)
+    {
         Map<String, String> validationErrors = new HashMap<>();
         List<ObjectError> validationErrorList = ex.getBindingResult().getAllErrors();
 

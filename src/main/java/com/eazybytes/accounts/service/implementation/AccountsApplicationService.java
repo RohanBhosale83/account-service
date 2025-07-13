@@ -8,17 +8,28 @@ import com.eazybytes.accounts.repository.interfaces.IAccountRepository;
 import com.eazybytes.accounts.repository.interfaces.ICustomerRepository;
 import com.eazybytes.accounts.service.interfaces.IAccountsApplicationService;
 import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Component
+/**
+ * Service class responsible for handling business operations related to
+ * Customer and Account management.
+ */
+@Service
 @AllArgsConstructor
 public class AccountsApplicationService implements IAccountsApplicationService
 {
-    ICustomerRepository customerRepository;
 
-    IAccountRepository accountRepository;
+    private final ICustomerRepository customerRepository;
+    private final IAccountRepository accountRepository;
 
+    /**
+     * Creates a new customer and associated account.
+     *
+     * @param customerInfo Information about the customer to be created.
+     * @param accountsInfo Information about the account to be created.
+     * @throws EntityAlreadyExistsException if the customer already exists.
+     */
     @Override
     public void createAccount(CustomerInfo customerInfo, AccountsInfo accountsInfo)
     {
@@ -36,12 +47,26 @@ public class AccountsApplicationService implements IAccountsApplicationService
         }
     }
 
+    /**
+     * Retrieves account details for a given customer ID.
+     *
+     * @param customerId   Unique ID of the customer.
+     * @param mobileNumber Mobile number of the customer (currently unused in logic).
+     * @return Account information associated with the customer.
+     */
     @Override
     public AccountsInfo getAccount(Long customerId, String mobileNumber)
     {
         return accountRepository.findByCustomerId(customerId);
     }
 
+    /**
+     * Retrieves customer details using the mobile number.
+     *
+     * @param mobileNumber Mobile number of the customer.
+     * @return Customer information if found.
+     * @throws ResourceNotFoundException if no customer is found with the given mobile number.
+     */
     @Override
     public CustomerInfo getCustomer(String mobileNumber)
     {
@@ -52,6 +77,12 @@ public class AccountsApplicationService implements IAccountsApplicationService
             throw new ResourceNotFoundException("Account not found mobile number: " + mobileNumber);
     }
 
+    /**
+     * Updates existing customer and account information.
+     *
+     * @param customerInfo Updated customer information.
+     * @param accountsInfo Updated account information.
+     */
     @Override
     public void updateAccount(CustomerInfo customerInfo, AccountsInfo accountsInfo)
     {
@@ -65,6 +96,11 @@ public class AccountsApplicationService implements IAccountsApplicationService
         }
     }
 
+    /**
+     * Deletes both the account and customer information using the mobile number.
+     *
+     * @param mobileNumber Mobile number of the customer to delete.
+     */
     @Transactional
     @Override
     public void deleteAccount(String mobileNumber)

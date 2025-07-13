@@ -7,9 +7,23 @@ import com.eazybytes.accounts.model.Accounts;
 import com.eazybytes.accounts.model.Customer;
 import org.springframework.stereotype.Component;
 
+/**
+ * Implementation of the ICustomerMapper interface.
+ * This class provides functionality to map between Customer and CustomerInfo objects,
+ * as well as between CustomerInfo and Customer objects with associated AccountsInfo.
+ * It is annotated with @Component to indicate that it is a Spring-managed bean.
+ */
 @Component
 public class CustomerMapper implements ICustomerMapper
 {
+    /**
+     * Maps a Customer object to a CustomerInfo object.
+     * This method extracts details such as customer ID, name, email, and mobile number
+     * from the Customer object and populates a new CustomerInfo object.
+     *
+     * @param customer The Customer object containing customer details.
+     * @return A CustomerInfo object populated with customer information.
+     */
     @Override
     public CustomerInfo mapToCustomerInfo(Customer customer)
     {
@@ -21,6 +35,15 @@ public class CustomerMapper implements ICustomerMapper
         return customerInfo;
     }
 
+    /**
+     * Maps a CustomerInfo object and an optional AccountsInfo object to a Customer object.
+     * This method populates the Customer object with details from CustomerInfo and, if provided,
+     * maps account details from AccountsInfo to the Customer's associated Accounts object.
+     *
+     * @param customerInfo The CustomerInfo object containing customer details.
+     * @param accountsInfo The AccountsInfo object containing account details (optional).
+     * @return A Customer object populated with customer and account information.
+     */
     @Override
     public Customer mapToCustomer(CustomerInfo customerInfo, AccountsInfo accountsInfo)
     {
